@@ -14,6 +14,6 @@ export const protect = async (req, res, next) => {
         req.user = user;
         next();
     } catch (error) {
-        res.json({ success: false, message: "Server error", error: error.message });
+        res.json({ success: false, message: error.message });
     }
 }
