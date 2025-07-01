@@ -1,5 +1,5 @@
 import React from 'react'
-import HotelCart from './Hotelcard'
+import HotelCard from './HotelCard'
 import Title from './Title'
 import { useAppContext } from '../../context/AppContext'
 
@@ -14,7 +14,7 @@ const FeaturedDestination = () => {
 
         <div className='flex flex-wrap items-center justify-center gap-6 mt-20'>
             { rooms.slice(0,4).map((room, index) => (
-              <HotelCart key={room._id} room={room} index={index} />
+              <HotelCard key={room._id} room={room} index={index} />
             ))}
         </div>
 

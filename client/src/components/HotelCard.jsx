@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { assets } from '../assets/assets'
 
-const HotelCart = ({ room, index }) => {
+const HotelCard = ({ room, index }) => {
   return (
     <Link to={'/rooms/' + room._id} onClick={()=>scrollTo(0,0)} key={room._id} className=' relative max-w-70 w-full rounded-xl overflow-hidden bg-white text-gray-500/90 shadow-[0px_4px_4px_rgba(0,0,0,0.5)]' >
         
@@ -30,4 +30,4 @@ const HotelCart = ({ room, index }) => {
   )
 }
 
-export default HotelCart
+export default HotelCard
