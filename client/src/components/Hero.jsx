@@ -1,14 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { assets, cities } from '../assets/assets'
+import { useAppContext } from '../../context/AppContext'
 
 const Hero = () => {
+
+  const { navigate, getToken, axios, setSearchedCities } = useAppContext();
+  const [destination, setDestination] = useState("");
+
+  const onSearch = async (e) => {
+    e.preventDefault();
+    navigate(`/rooms?destination=${destination}`);
+
+    // call api to save recent searched city
+    const token = await getToken();
+    await axios.post('/api/user/store-recent-search', { recentSearchedCities: destination }, {headers: {Authorization: `Bearer ${token}`}});
+
+    // add destination to searchedCities max 3 recent searched cities
+    setSearchedCities((prevCities) => {
+      const updatedSearchedCities = { ...prevCities, destination};
+      if(updatedSearchedCities.length > 3){
+        updatedSearchedCities.shift();
+      }
+      return updatedSearchedCities;
+    })
+  }
+
   return (
     <div className='flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 xl:px-32 text-white bg-[url("/src/assets/heroImage.png")] bg-no-repeat bg-cover h-screen '>
         <p className='bg-[#49B9FF]/50 px-3.5 py-1 rounded-full mt-20'>The Ultimate Hotel Experience</p>
         <h1 className='font-playfair text-2xl md:text-5xl md:text-[56px] md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4'>Discover Your Perfect Gateway Destination</h1>
         <p className='max-w-130 mt-2 text-sm md:text-base'>Unparalleled luxury and comfort await at the world's most exclusive hotels and resorts. Start your journey today.</p>
 
-        <form className='bg-white text-gray-500 mt-8 rounded-lg px-6 py-4  flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
+        <form onSubmit={onSearch} className='bg-white text-gray-500 mt-8 rounded-lg px-6 py-4  flex flex-col md:flex-row max-md:items-start gap-4 max-md:mx-auto'>
 
           <div>
               <div className='flex items-center gap-2'>
@@ -16,7 +39,7 @@ const Hero = () => {
                       <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 10h16M8 14h8m-4-7V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" />
                   <label htmlFor="destinationInput">Destination</label>
               </div>
-              <input list='destinations' id="destinationInput" type="text" className="rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" placeholder="Type here" required />
+              <input onChange={(e)=>setDestination(e.target.value)} value={destination} list='destinations' id="destinationInput" type="text" className="rounded border border-gray-200 px-3 py-1.5 mt-1.5 text-sm outline-none" placeholder="Type here" required />
               <datalist id='destinations'>
                 {cities.map((city, index)=>(
                   <option value={city} key={index} />
